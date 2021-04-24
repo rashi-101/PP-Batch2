@@ -1,0 +1,35 @@
+body{
+    font-family: 'Markazi Text', serif;
+    font-size: 2rem;
+    background-color:black;
+    color:honeydew;
+}
+.task{
+    background-color:gray;
+    height: 5vh;
+    margin-bottom: 0.5vh;
+    width: 40vw;
+    text-align: center;
+    list-style: none;
+    border: 2px solid honeydew;
+}
+.task-list{
+    margin-left: 25vw;
+
+}
+
+.input_box{
+    text-align: center;
+    height: 7vh;
+    margin-left: 25vw;
+    margin-top:1vh;
+    width: 40vw;
+    font-size: 2rem;
+}
+
+.instruction{
+    text-align:center;
+    font-size: 2rem;
+}
+
+

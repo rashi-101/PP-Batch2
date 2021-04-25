@@ -1,0 +1,47 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    margin:0px;
+}
+.upper{
+    background-color: gray;
+    height:20vh;
+    flex: auto;
+}
+
+.button-holder{
+    background-color: lightgrey;
+    height:50%;
+    width:20%;
+    padding-top: 2vh;
+    margin-top: 2vh;
+    margin-left: 5vw;
+    display:flex;
+}
+
+.color1{
+    padding: 3vh;
+    background-color: lightpink;
+}
+
+.color2{
+    padding: 3vh;
+
+    background-color:lightseagreen;
+}
+.color3{
+    padding: 3vh;
+
+    background-color: mediumpurple;
+}
+.color4{
+    padding: 3vh;
+
+    background-color: olive;
+}
+
+.color-bar{
+    background-color: blueviolet;
+    height:5vh;
+}

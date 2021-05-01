@@ -1,0 +1,78 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    margin: 0;
+}
+.toolbar{
+    height: 18vh;
+    background-color: darkgrey;
+    margin:0;
+    padding-left:3rem;
+    padding-top:2rem;
+    display:flex;
+    /* align-items: center; */
+}
+
+.filter-container{
+    height:65%;
+    width: 16rem;
+    background-color: gray;
+    margin-right: 10vw;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.filter{
+    width:25%;
+    height: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pink{
+    height:60%;
+    width: 70%;
+    background-color: pink;
+}
+
+.green{
+    height:60%;
+    width: 70%;
+    background-color: green;
+}
+
+.blue{
+    height:60%;
+    width: 70%;
+    background-color: blue;
+}
+
+.black{
+    height:60%;
+    width: 70%;
+    background-color: black;
+}
+
+.action-container{
+    height:65%;
+    width: 8rem;
+    background-color: gray;
+    display:flex;
+    justify-content: stretch;
+    align-items: center;
+}
+
+.icon-container{
+    width: 50%;
+    display:flex;
+    justify-content: center;
+    font-size:xx-large;
+}
+
+.main-container{
+    height:72vh;
+}

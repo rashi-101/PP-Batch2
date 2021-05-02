@@ -15,30 +15,30 @@
     <div class="menu-container">
         <div class="formatting-container">
             <div class="subgroup">
-                    <select name="" id="font-family">
-                        <option value="">Arial</option>
-                        <option value="">Times New Roman</option>
-                        <option value="">Georgia</option>
-                        <option value="">Monospace</option>
-                        <option value="">Cambria</option>
-                        <option value="">sans-sarif</option>
-                        <option value="">fantasy</option>
-                    </select>
+                <select name="" id="font-family" class="font-family">
+                    <option value="Arial">Arial</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Monospace">Monospace</option>
+                    <option value="Cambria">Cambria</option>
+                    <option value="sans-sarif">sans-sarif</option>
+                    <option value="fantasy">fantasy</option>
+                </select>
                 <div class="bui_container">
-                    <input type="button" value="B">
-                    <input type="button" value="I">
-                    <input type="button" value="U">
+                    <input type="button" value="B" class="bold">
+                    <input type="button" value="I" class="italics">
+                    <input type="button" value="U" class="underline">
                 </div>
             </div>
             <div class="subgroup">
-                    <select name="" id="font-size">
-                        <option value="8">8</option>
-                        <option value="10">10</option>
-                        <option value="12">12</option>
-                        <option value="16">16</option>
-                        <option value="20">20</option>
-                        <option value="30">30</option>
-                    </select>
+                <select name="" id="font-size" class="font-size">
+                    <option value="8">8</option>
+                    <option value="10">10</option>
+                    <option value="12">12</option>
+                    <option value="16">16</option>
+                    <option value="20">20</option>
+                    <option value="30">30</option>
+                </select>
                 <div class="color-container">
                     <input type="color" id="color">
                     <input type="color" id="bg-color">
@@ -50,6 +50,16 @@
             <input type="button" value="C" class="center">
             <input type="button" value="R" class="right">
         </div>
+        <div class="theme-container">
+            <!-- <input type="color" class="theme-select"></input> -->
+            <div class="theme-select">
+                <div class="theme lightsteelblue"></div>
+                <div class="theme rosybrown"></div>
+                <div class="theme tan"></div>
+                <div class="theme darkolivegreen"></div>
+            </div>
+        </div>
+    </div>
     </div>
     <div class="formula-container">
         <input type="text" class="address-box">
@@ -73,7 +83,8 @@
             <div class="sheet active-sheet" sheetIdx="0"> Sheet 1 </div>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script src="init.js" defer></script>
+    <script src="script.js" defer></script>
 </body>
 
 </html>

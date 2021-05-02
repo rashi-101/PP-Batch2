@@ -26,32 +26,9 @@ sheet_list.addEventListener("click", function(e){
 
 });
 
-let topRow = document.querySelector(".top-row");
-let str="";
-for(let i=0; i<26; i++){
-    str+= `<div class='col'>${String.fromCharCode(65+i)}</div>`;
-}
-topRow.innerHTML=str;
-let leftCol = document.querySelector(".left-col");
-        str = ""
-        for (let i = 0; i < 100; i++) {
-            str += `<div class='left-col_box'>${i + 1}</div>`
-        }
-        leftCol.innerHTML = str;
-let grid = document.querySelector(".grid");
-str="";
-for(let i=0; i<100; i++){
-    str+='<div class="row">'
-    for(let j=0; j<26; j++){
-        str+=`<div class="col" rid="${i}" cid ="${j}" contenteditable="true"></div>`;
-    }
-    str+="</div>"
-}
-grid.innerHTML=str;
-
-
 let allCells = document.querySelectorAll(".grid .col");
 let addressBar = document.querySelector(".address-box");
+
 for(let i=0; i<allCells.length;i++){
     allCells[i].addEventListener("click", function(){
         let rid = Number(allCells[i].getAttribute("rid"))+1;
@@ -59,6 +36,8 @@ for(let i=0; i<allCells.length;i++){
         let colAdd = String.fromCharCode(cid + 65);
         let address = colAdd+rid;
         addressBar.value=address;
+        addressBar.style.textAlign = "center";
+        addressBar.style.border = "thick solid gray";
     });
 }
 allCells[0].click();
@@ -69,28 +48,19 @@ let rightBtn = document.querySelector(".right");
 
 leftBtn.addEventListener("click", function(){
     let address = addressBar.value;
-    let { rid, cid} = getRCidFromAdress(address);
-    console.log(rid +" "+ cid);
-    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
-    console.log(cell);
+    let cell = getRCidFromAdress(address);
     cell.style.textAlign = "left";
 });
 
 
 rightBtn.addEventListener("click", function(){
     let address = addressBar.value;
-    let { rid, cid} = getRCidFromAdress(address);
-    console.log(rid +" "+ cid);
-    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
-    console.log(cell);
+    let cell= getRCidFromAdress(address);
     cell.style.textAlign = "right";
 });
 centerBtn.addEventListener("click", function(){
     let address = addressBar.value;
-    let { rid, cid} = getRCidFromAdress(address);
-    console.log(rid +" "+ cid);
-    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
-    console.log(cell);
+    let cell = getRCidFromAdress(address);
     cell.style.textAlign = "center";
 });
 
@@ -99,5 +69,76 @@ function getRCidFromAdress(address){
     let cellRowAdr = address.slice(1);
     let cid = cellColAdr-65;
     let rid = Number(cellRowAdr)-1 ;
-    return {rid, cid};
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+    return cell;
 }
+
+let boldBtn = document.querySelector(".bold");
+boldBtn.addEventListener("click", function(){
+    let address = addressBar.value;
+    let cell = getRCidFromAdress(address);
+    cell.style.fontWeight = cell.style.fontWeight=="bold"? "normal":"bold";
+});
+
+let italicsBtn = document.querySelector(".italics");
+italicsBtn.addEventListener("click", function(){
+    let address = addressBar.value;
+    let cell = getRCidFromAdress(address);
+    cell.style.fontStyle =cell.style.fontStyle== "italic"?"normal":"italic";
+});
+
+let underlineBtn = document.querySelector(".underline");
+underlineBtn.addEventListener("click", function(){
+    let address = addressBar.value;
+    let cell = getRCidFromAdress(address);
+    cell.style.textDecoration = cell.style.textDecoration=="underline"?"none":"underline";
+});
+
+let fontSizeDD = document.querySelector(".font-size");
+fontSizeDD.addEventListener("change",function(){
+    let address = addressBar.value;
+    let fSize = fontSizeDD.value;
+    let cell = getRCidFromAdress(address);
+    cell.style.fontSize=fSize+"px";
+});
+
+let fontColor = document.querySelector("#color");
+fontColor.addEventListener("change", function(){
+    let address = addressBar.value;
+    let cell = getRCidFromAdress(address);
+    let font_color = fontColor.value;
+    cell.style.color = font_color;
+});
+let cellBgColor = document.querySelector("#bg-color");
+cellBgColor.addEventListener("change", function(){
+    let address = addressBar.value;
+    let cell = getRCidFromAdress(address);
+    let bg_color = cellBgColor.value;
+    cell.style.backgroundColor = bg_color;
+});
+
+let themeSelect = document.querySelector(".theme-select");
+let menuContainer = document.querySelector(".menu-container");
+let leftColB= document.querySelectorAll(".left-col_box");
+
+// let topRow = document.querySelector(".top-row");
+for(let i=0; i<themeSelect.children.length; i++){
+    themeSelect.children[i].addEventListener("click", function(){
+        let color=themeSelect.children[i].classList[1];
+        menuContainer.style.backgroundColor=color;
+        topRow.style.backgroundColor=color;
+        leftColB.forEach(function(col){
+            col.style.backgroundColor=color;
+        });
+        document.querySelector(".icon").style.color =color;
+    })
+    
+}
+
+let fontFam = document.querySelector(".font-family");
+fontFam.addEventListener("change", function(){
+    let address = addressBar.value;
+    let cell = getRCidFromAdress(address);
+    let font = fontFam.value;
+    cell.style.fontFamily = font;
+});

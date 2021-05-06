@@ -63,6 +63,7 @@ body{
 .plus-container{
     height:100%;
     width:35px;
+    min-width:35px;
     display:flex;
     justify-content: center;
     align-items: center;

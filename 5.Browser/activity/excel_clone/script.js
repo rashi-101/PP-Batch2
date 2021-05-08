@@ -1,6 +1,13 @@
 let plus_container = document.querySelector(".plus-container");
 let sheet_list = document.querySelector(".sheet-list");
-
+let boldBtn = document.querySelector(".bold");
+let align = document.querySelectorAll(".alignment-container>*");
+let leftBtn = document.querySelector(".left");
+let centerBtn = document.querySelector(".center");
+let rightBtn = document.querySelector(".right");
+let sheetDb= workSheetDb[0];
+let allCells = document.querySelectorAll(".grid .col");
+let addressBar = document.querySelector(".address-box");
 
 plus_container.addEventListener("click", function(){
     let sheetsArr = document.querySelectorAll(".sheet");
@@ -12,6 +19,7 @@ plus_container.addEventListener("click", function(){
     newSheet.setAttribute("sheetIdx", idx+1);
     newSheet.innerText=`Sheet ${idx + 2}`;
     sheet_list.appendChild(newSheet);
+    initCurrentSheetDb();
 });
 
 sheet_list.addEventListener("click", function(e){
@@ -24,99 +32,156 @@ sheet_list.addEventListener("click", function(e){
     }
     mySheet.classList.add("active-sheet");
 
+    initUi();
+
 });
 
-let allCells = document.querySelectorAll(".grid .col");
-let addressBar = document.querySelector(".address-box");
+function initUi(){
+    for(let i=0; i<allCells.length; i++){
+        allCells[i].innerHTML="";
+    }
+}
+
+
+//get address from the cell when clicked on cell
 
 for(let i=0; i<allCells.length;i++){
     allCells[i].addEventListener("click", function(){
-        let rid = Number(allCells[i].getAttribute("rid"))+1;
+        let rid = Number(allCells[i].getAttribute("rid"));
         let cid = Number(allCells[i].getAttribute("cid"));
         let colAdd = String.fromCharCode(cid + 65);
-        let address = colAdd+rid;
+        let rowAdd = rid+1;
+        let address = colAdd+rowAdd;
         addressBar.value=address;
         addressBar.style.textAlign = "center";
         addressBar.style.border = "thick solid gray";
+
+        //highlightting format options
+
+        let cellObj = sheetDb[rid][cid];
+
+        //alignment
+        for(let i=0; i<align.length; i++){
+            align[i].classList.remove("active-btn");
+        }
+        if(cellObj.halign=="left"){
+            leftBtn.classList.add("active-btn");
+        } else if(cellObj.halign=="center"){
+            centerBtn.classList.add("active-btn");
+        } else if(cellObj.halign=="right"){
+            rightBtn.classList.add("active-btn");
+        }
+
+        //font
+        console.log(cellObj.bold);
     });
 }
 allCells[0].click();
 
-let leftBtn = document.querySelector(".left");
-let centerBtn = document.querySelector(".center");
-let rightBtn = document.querySelector(".right");
+
+//alignment change
 
 leftBtn.addEventListener("click", function(){
     let address = addressBar.value;
-    let cell = getRCidFromAdress(address);
+    let {rid ,cid} = getRCidFromAdress(address);
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     cell.style.textAlign = "left";
+    for(let i=0; i<align.length; i++){
+            align[i].classList.remove("active-btn");
+    }
+    leftBtn.classList.add("active-btn");
+    let cellObj = sheetDb[rid][cid];
+    cellObj.halign="left";
+
 });
-
-
 rightBtn.addEventListener("click", function(){
     let address = addressBar.value;
-    let cell= getRCidFromAdress(address);
+    let {rid ,cid} = getRCidFromAdress(address);
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     cell.style.textAlign = "right";
+    for(let i=0; i<align.length; i++){
+        align[i].classList.remove("active-btn");
+}
+rightBtn.classList.add("active-btn");
+let cellObj = sheetDb[rid][cid];
+cellObj.halign="right";
 });
 centerBtn.addEventListener("click", function(){
     let address = addressBar.value;
-    let cell = getRCidFromAdress(address);
+    let {rid ,cid} = getRCidFromAdress(address);
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     cell.style.textAlign = "center";
+    for(let i=0; i<align.length; i++){
+        align[i].classList.remove("active-btn");
+}
+centerBtn.classList.add("active-btn");
+let cellObj = sheetDb[rid][cid];
+cellObj.halign="center";
 });
 
+//helper function to get cell from its address
 function getRCidFromAdress(address){
     let cellColAdr = address.charCodeAt(0);
     let cellRowAdr = address.slice(1);
     let cid = cellColAdr-65;
     let rid = Number(cellRowAdr)-1 ;
-    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
-    return cell;
+    // let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+    return { rid, cid};
 }
 
-let boldBtn = document.querySelector(".bold");
+//bold-italics-underline
 boldBtn.addEventListener("click", function(){
+    
     let address = addressBar.value;
-    let cell = getRCidFromAdress(address);
+    let {rid ,cid} = getRCidFromAdress(address);
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     cell.style.fontWeight = cell.style.fontWeight=="bold"? "normal":"bold";
 });
-
 let italicsBtn = document.querySelector(".italics");
 italicsBtn.addEventListener("click", function(){
     let address = addressBar.value;
-    let cell = getRCidFromAdress(address);
+    let {rid ,cid} = getRCidFromAdress(address);
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     cell.style.fontStyle =cell.style.fontStyle== "italic"?"normal":"italic";
 });
-
 let underlineBtn = document.querySelector(".underline");
 underlineBtn.addEventListener("click", function(){
     let address = addressBar.value;
-    let cell = getRCidFromAdress(address);
+    let {rid ,cid} = getRCidFromAdress(address);
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     cell.style.textDecoration = cell.style.textDecoration=="underline"?"none":"underline";
 });
 
+
+//font size change
 let fontSizeDD = document.querySelector(".font-size");
 fontSizeDD.addEventListener("change",function(){
     let address = addressBar.value;
     let fSize = fontSizeDD.value;
-    let cell = getRCidFromAdress(address);
+    let {rid ,cid} = getRCidFromAdress(address);
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     cell.style.fontSize=fSize+"px";
 });
-
+//cell font color
 let fontColor = document.querySelector("#color");
 fontColor.addEventListener("change", function(){
     let address = addressBar.value;
-    let cell = getRCidFromAdress(address);
+    let {rid ,cid} = getRCidFromAdress(address);
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     let font_color = fontColor.value;
     cell.style.color = font_color;
 });
+//cell bg color
 let cellBgColor = document.querySelector("#bg-color");
 cellBgColor.addEventListener("change", function(){
     let address = addressBar.value;
-    let cell = getRCidFromAdress(address);
+    let {rid ,cid} = getRCidFromAdress(address);
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     let bg_color = cellBgColor.value;
     cell.style.backgroundColor = bg_color;
 });
 
+//excel theme change
 let themeSelect = document.querySelector(".theme-select");
 let menuContainer = document.querySelector(".menu-container");
 let leftColB= document.querySelectorAll(".left-col_box");
@@ -134,11 +199,28 @@ for(let i=0; i<themeSelect.children.length; i++){
     })
     
 }
-
+//font family
 let fontFam = document.querySelector(".font-family");
 fontFam.addEventListener("change", function(){
     let address = addressBar.value;
-    let cell = getRCidFromAdress(address);
+    let {rid ,cid} = getRCidFromAdress(address);
+    let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     let font = fontFam.value;
     cell.style.fontFamily = font;
 });
+
+for(let i=0; i<allCells.length;i++){
+    allCells[i].addEventListener("blur", function(){
+        console.log(allCells[i].innerText);
+    });
+}
+
+function setDB(sheetDb){
+    for(let i=0; i<sheetDb.length;i++){
+        for(let j=0; j<sheetDb[i].length; j++){
+            let cell = document.querySelector(`.col[rid="${i}"][cid="${j}"]`);
+            let {bold, italics, underline, fontFamily, fontSize, halign, value}=sheetDb;
+            cell.style.fontStyle
+        }
+    }
+}

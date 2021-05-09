@@ -36,7 +36,9 @@ function initCurrentSheetDb(){
                     halign:"left",
                     fontFamily:"Arial",
                     fontSize:"10",
-                    value:""
+                    value:"",
+                    children:[],
+                    formula:"",
                 }
                 row.push(cell);
         }

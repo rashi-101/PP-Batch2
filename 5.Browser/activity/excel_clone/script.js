@@ -1,3 +1,5 @@
+let underlineBtn = document.querySelector(".underline");
+let italicsBtn = document.querySelector(".italics");
 let plus_container = document.querySelector(".plus-container");
 let sheet_list = document.querySelector(".sheet-list");
 let boldBtn = document.querySelector(".bold");
@@ -8,6 +10,7 @@ let rightBtn = document.querySelector(".right");
 let sheetDb= workSheetDb[0];
 let allCells = document.querySelectorAll(".grid .col");
 let addressBar = document.querySelector(".address-box");
+let formulaInput = document.querySelector(".formula-box");
 
 plus_container.addEventListener("click", function(){
     let sheetsArr = document.querySelectorAll(".sheet");
@@ -73,7 +76,21 @@ for(let i=0; i<allCells.length;i++){
         }
 
         //font
-        console.log(cellObj.bold);
+        if(cellObj.bold==true){
+            boldBtn.classList.add("active-btn");
+        }else{
+            boldBtn.classList.remove("active-btn");
+        }
+        if(cellObj.italic==true){
+            italicsBtn.classList.add("active-btn");
+        }else{
+            italicsBtn.classList.remove("active-btn");
+        }
+        if(cellObj.underline==true){
+            underlineBtn.classList.add("active-btn");
+        }else{
+            underlineBtn.classList.remove("active-btn");
+        }
     });
 }
 allCells[0].click();
@@ -131,25 +148,52 @@ function getRCidFromAdress(address){
 
 //bold-italics-underline
 boldBtn.addEventListener("click", function(){
-    
     let address = addressBar.value;
     let {rid ,cid} = getRCidFromAdress(address);
     let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
-    cell.style.fontWeight = cell.style.fontWeight=="bold"? "normal":"bold";
+    let cellObj = sheetDb[rid][cid];
+    if(cellObj.bold===true){
+        cell.style.fontWeight="normal";
+        boldBtn.classList.remove("active-btn");
+        cellObj.bold=false;
+    }else{
+        cell.style.fontWeight="bold";
+        boldBtn.classList.add("active-btn");
+        cellObj.bold=true;
+    }
+   // cell.style.fontWeight = cell.style.fontWeight=="bold"? "normal":"bold";
 });
-let italicsBtn = document.querySelector(".italics");
 italicsBtn.addEventListener("click", function(){
     let address = addressBar.value;
     let {rid ,cid} = getRCidFromAdress(address);
     let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
-    cell.style.fontStyle =cell.style.fontStyle== "italic"?"normal":"italic";
+    let cellObj = sheetDb[rid][cid];
+    if(cellObj.italic===true){
+        cell.style.fontStyle="normal";
+        italicsBtn.classList.remove("active-btn");
+        cellObj.bold=false;
+    }else{
+        cell.style.fontStyle="italic";
+        italicsBtn.classList.add("active-btn");
+        cellObj.italic=true;
+    }
+   // cell.style.fontStyle =cell.style.fontStyle== "italic"?"normal":"italic";
 });
-let underlineBtn = document.querySelector(".underline");
 underlineBtn.addEventListener("click", function(){
     let address = addressBar.value;
     let {rid ,cid} = getRCidFromAdress(address);
     let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
-    cell.style.textDecoration = cell.style.textDecoration=="underline"?"none":"underline";
+    let cellObj = sheetDb[rid][cid];
+    if(cellObj.underline===true){
+        cell.style.fontStyle="normal";
+        underlineBtn.classList.remove("active-btn");
+        cellObj.underline=false;
+    }else{
+        cell.style.fontStyle="italic";
+        underlineBtn.classList.add("active-btn");
+        cellObj.underline=true;
+    }
+    // cell.style.textDecoration = cell.style.textDecoration=="underline"?"none":"underline";
 });
 
 
@@ -185,7 +229,6 @@ cellBgColor.addEventListener("change", function(){
 let themeSelect = document.querySelector(".theme-select");
 let menuContainer = document.querySelector(".menu-container");
 let leftColB= document.querySelectorAll(".left-col_box");
-
 // let topRow = document.querySelector(".top-row");
 for(let i=0; i<themeSelect.children.length; i++){
     themeSelect.children[i].addEventListener("click", function(){
@@ -199,6 +242,7 @@ for(let i=0; i<themeSelect.children.length; i++){
     })
     
 }
+
 //font family
 let fontFam = document.querySelector(".font-family");
 fontFam.addEventListener("change", function(){
@@ -209,18 +253,102 @@ fontFam.addEventListener("change", function(){
     cell.style.fontFamily = font;
 });
 
-for(let i=0; i<allCells.length;i++){
-    allCells[i].addEventListener("blur", function(){
-        console.log(allCells[i].innerText);
+//  
+
+// function setDB(sheetDb){
+//     for(let i=0; i<sheetDb.length;i++){
+//         for(let j=0; j<sheetDb[i].length; j++){
+//             let cell = document.querySelector(`.col[rid="${i}"][cid="${j}"]`);
+//             let {bold, italics, underline, fontFamily, fontSize, halign, value}=sheetDb;
+//             cell.style.fontStyle
+//         }
+//     }
+// }
+
+for(let i = 0; i < allCells.length; i++) {
+    allCells[i].addEventListener("blur", function handleCell() {
+        let address = addressBar.value;
+        let { rid, cid } = getRCidFromAdress(address);
+        let cellObject = sheetDb[rid][cid];
+        let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
+        cellObject.value = cell.innerText;
+        changeChildren(cellObject);
     });
 }
 
-function setDB(sheetDb){
-    for(let i=0; i<sheetDb.length;i++){
-        for(let j=0; j<sheetDb[i].length; j++){
-            let cell = document.querySelector(`.col[rid="${i}"][cid="${j}"]`);
-            let {bold, italics, underline, fontFamily, fontSize, halign, value}=sheetDb;
-            cell.style.fontStyle
+formulaInput.addEventListener("keydown", function(e){
+    let formula = formulaInput.value;
+    if(e.key=="Enter" && formulaInput.value != ""){
+        //evaluate formula
+        let evalValue = evaluate(formula);
+        //console.log(evalValue);
+
+        //put evaluated value on ui
+        let address = addressBar.value;
+        let { rid, cid } = getRCidFromAdress(address);
+        setUIByFormula(evalValue, rid, cid);
+
+        //put evaluated value in db
+        setValInDb(evalValue, rid, cid, formula, address);
+    }
+});
+
+function setValInDb(val, rid, cid, formula, address){
+    let cell = sheetDb[rid][cid];
+    cell.value = val;
+    cell.formula=formula;
+    // for(let i=0; i<formulaTokens.length; i++){
+    //     let firstCharOfToken = formulaTokens[i].charCodeAt(0);
+    //     if(firstCharOfToken >= 65 && firstCharOfToken<=90){
+    //         //console.log(formulaTokens[i]);
+    //         let { rid, cid } = getRCidFromAdress(formulaTokens[i]);
+    //         let cellObj = sheetDb[rid][cid];
+    //         let { value } = cellObj;
+    //         //put cell values in formula-string
+    //         formula = formula.replace(formulaTokens[i],value);
+    //     }
+    // }
+}
+function setUIByFormula(val, rid, cid){
+    document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`).innerText=val;
+}
+
+function evaluate(formula){
+    //split on the basis of space// ( A1 + A2 ) ---> [(,A1,+,A2,)]
+    let formulaTokens = formula.split(" ");
+    //get A1 A2 value
+    for(let i=0; i<formulaTokens.length; i++){
+        let firstCharOfToken = formulaTokens[i].charCodeAt(0);
+        if(firstCharOfToken >= 65 && firstCharOfToken<=90){
+            //console.log(formulaTokens[i]);
+            let { rid, cid } = getRCidFromAdress(formulaTokens[i]);
+            let cellObj = sheetDb[rid][cid];
+            let { value } = cellObj;
+            //put cell values in formula-string
+            formula = formula.replace(formulaTokens[i],value);
         }
+    }
+    console.log(formula);
+    
+    //evaluate formula expression
+    let ans = eval(formula);
+
+    //return evaluated value
+    return ans;
+}
+
+
+function changeChildren(cellObj){
+    let children = cellObj.children;
+    for(let i=0; i<children.length; i++){
+        let chAddress = children[i];
+        let chridCid = getRCidFromAdress(chAddress);
+        let chObj = sheetDb[chridCid.rid][chridCid.cid];
+        let formula = chObj.formula;
+        let evalVal = evaluate(formula);
+        setUIByFormula(evalVal, chridCid.rid, chridCid.cid);
+        setValInDb(evalVal, chridCid.rid, chridCid,cid, formula, chAddress);
+        //changing dependents of dependent
+        changeChildren(chObj);
     }
 }

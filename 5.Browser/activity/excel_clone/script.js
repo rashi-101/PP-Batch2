@@ -20,7 +20,7 @@ plus_container.addEventListener("click", function(){
     let newSheet = document.createElement("div");
     newSheet.setAttribute("class", "sheet");
     newSheet.setAttribute("sheetIdx", idx+1);
-    newSheet.innerText=`Sheet ${idx + 2}`;
+    newSheet.innerText=`Sheet ${idx + 1}`;
     sheet_list.appendChild(newSheet);
     initCurrentSheetDb();
 });
@@ -34,14 +34,35 @@ sheet_list.addEventListener("click", function(e){
         allSheet.children[i].classList.remove("active-sheet");
     }
     mySheet.classList.add("active-sheet");
+    let idx = mySheet.getAttribute("sheetIdx");
+    idx = Number(idx);
+   sheetDb = workSheetDb[idx-1];
 
     initUi();
-
+    setUI(sheetDb);
 });
 
 function initUi(){
     for(let i=0; i<allCells.length; i++){
-        allCells[i].innerHTML="";
+        allCells[i].innerText="";
+        allCells[i].style.fontWeight="normal";
+        allCells[i].style.fontStyle = "normal";
+        allCells[i].style.textDecoration = "none";
+        allCells[i].style.fontFamily = "Arial";
+        allCells[i].style.fontSize = "16px";
+        allCells[i].style.textAlign = "left";
+    }
+}
+
+function setUI(sheetDb){
+    for(let i=0; i<sheetDb.length; i++){
+        for(let j=0; j<sheetDb[i].length; j++){
+            let cell = document.querySelector(`.col[rid="${i}"][cid="${j}"]`);
+            let {bold ,italic, underline, fontFamily, fontSize, halign, value, children, formula} = sheetDb[i][j];
+            cell.style.fontWeight = bold==true?"bold":"normal";
+            cell.innerText = value;
+            
+        }
     }
 }
 
@@ -171,7 +192,7 @@ italicsBtn.addEventListener("click", function(){
     if(cellObj.italic===true){
         cell.style.fontStyle="normal";
         italicsBtn.classList.remove("active-btn");
-        cellObj.bold=false;
+        cellObj.italic=false;
     }else{
         cell.style.fontStyle="italic";
         italicsBtn.classList.add("active-btn");
@@ -185,11 +206,11 @@ underlineBtn.addEventListener("click", function(){
     let cell = document.querySelector(`.col[rid="${rid}"][cid="${cid}"]`);
     let cellObj = sheetDb[rid][cid];
     if(cellObj.underline===true){
-        cell.style.fontStyle="normal";
+        cell.style.textDecoration="none";
         underlineBtn.classList.remove("active-btn");
         cellObj.underline=false;
     }else{
-        cell.style.fontStyle="italic";
+        cell.style.textDecoration="underline";
         underlineBtn.classList.add("active-btn");
         cellObj.underline=true;
     }
@@ -302,7 +323,7 @@ function setValInDb(val, rid, cid, formula, address){
     //     if(firstCharOfToken >= 65 && firstCharOfToken<=90){
     //         //console.log(formulaTokens[i]);
     //         let { rid, cid } = getRCidFromAdress(formulaTokens[i]);
-    //         let cellObj = sheetDb[rid][cid];
+    //      5   let cellObj = sheetDb[rid][cid];
     //         let { value } = cellObj;
     //         //put cell values in formula-string
     //         formula = formula.replace(formulaTokens[i],value);

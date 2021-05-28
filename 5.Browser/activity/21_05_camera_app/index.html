@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- //Media capture and Streams apis is an api related to webrtc which provides support for streaming audio and video data. It 
+    provides success and error callbacks when using the data asynchronously -->
+    <div class="video-container">
+        <!-- controls is a boolean attribute for video, when present it displays play,pause,volume,subtitle,fullscreen etc options for a video  -->
+        <!-- autoplay Attribute is used to specify that the audio/video should automatically start playing when web page is loaded. -->
+        <video class="video" id="video-elem" autoplay></video>
+        </div>
+    <button class="record-btn button" id="record-video">Record</button>
+    <button class="capture-btn button" id="record-video">Capture</button>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+<!-- https://developer.mozilla.org/en-US/docs/Web/API/Media_Streams_API
+https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Drawing_graphics -->
+
+<!-- We'll explore 3 apis:indexedDB and mediaStream and Canvas -->
+<!-- What all we'll do:- 
+1) Take camera and microphone permission
+2) Features: zoom in, zoom out, filters, take picture, record video and download pic/video
+    2.1 zoom in zoom out will happen with Canvas api
+    2.2 captured images will be in local storage
+3) Media stream api will be used to access camera and audio  
+4) idexedDB will be used for storage as it provides infinite storage for chrome -->

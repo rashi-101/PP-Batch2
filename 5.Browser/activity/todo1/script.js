@@ -14,3 +14,10 @@ input.addEventListener("keydown", function(e){
         input.value="";
     }
 })
+const person = {
+    name: "Obaseki Nosa",
+    location: "Lagos",
+}
+//window.localStorage.setItem('user', JSON.stringify(person));
+
+// https://blog.logrocket.com/localstorage-javascript-complete-guide/

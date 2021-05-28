@@ -32,4 +32,9 @@ body{
     font-size: 2rem;
 }
 
+/* @media screen  and (max-width){
+    .input_box{
+        width:884px;
+} */
+
 

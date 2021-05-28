@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+        .color{
+            height:5vh;
+            width:5vw;
+            border:1px solid black;
+        }
+        .red{
+            background-color: red;
+        }
+        .blue{
+            background-color: blue;
+        }
+        .yellow{
+            background-color: yellow;
+        }
+        .theme{
+            display: flex;
+            width: 25vw;
+            justify-content: space-around;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <h1>Canvas example</h1> -->
+    <div class="theme">
+    <div class="red color "></div>
+    <div class="blue color"></div>
+    <div class="yellow color"></div>
+    </div>
+    <canvas id="board"></canvas>
+
+
+    <script>
+        //canvas is an api optimized for drawing
+        let theme = document.querySelector(".theme");
+        let colorDiv = document.querySelectorAll(".color");
+        for(let i=0; i<colorDiv.length; i++){
+            colorDiv[i].addEventListener("click", function(e){
+                let clr = colorDiv[i].classList[0];
+                tool.strokeStyle=clr;
+            })
+        }
+        let board = document.getElementById("board");
+        board.height = window.innerHeight;
+        board.width = window.innerWidth;
+        window.addEventListener("resize", function () {
+            board.height = window.innerHeight;
+            board.width = window.innerWidth;
+            //whenever browser window is resized canvas gets cleared up, therefore we have stuff inside draaw function and calling it whenver window is resized
+          //  draw();
+        });
+
+
+        let tool = board.getContext("2d");
+        //this is a drawing tool/pen with which we do something on 2d plane
+        
+       // draw();
+        function draw() {
+            //pen/brush color
+            tool.fillStyle = "red";
+
+            tool.fillRect(0, 0, board.width, board.height);
+            tool.fillStyle = "cyan";
+
+            //will be there at top of canvas/drawing board
+            tool.fillRect(0, 0, board.width / 2, board.height / 2);
+
+            //outline
+            tool.strokeStyle = "yellow";
+            tool.lineWidth = 10;
+            tool.strokeRect(50, 50, board.width / 2, board.height / 2);
+        }
+
+        //to draw something on Canvas:- we'll use some premade funcions 
+        //tool.beginPath starts drawing
+        //tool.moveTo(cordinates) :- move to specified coordinates wihout drawing from curren postion to desti cordi
+        //tool.lineTo(coordinates):- draw from specified coordi to current position 
+        //tool.stroke():- it renders the path on ui, without it nothing would be visible on board
+        // tool.strokeStyle="red";
+        // tool.stroke();
+        // tool.lineWidth=7;
+        // tool.beginPath();
+        // tool.moveTo(10,10);
+        // tool.lineTo(120,150);
+        // tool.lineTo(120,300);
+        // tool.moveTo(225,300);
+        // tool.lineTo(150,400);
+
+        //drawing as per mouse movement
+        //mousedown event - when mouse is pressed
+        //mouseup event - when mouse is released
+        // document.body.addEventListener("mousedown", function(e){
+        //     let x = e.clientX;
+        //     let y = e.clientY;
+        //     tool.beginPath();
+        //     tool.moveTo(x,y);
+
+        // });
+        // document.body.addEventListener("mouseup", function(e){
+        //     let x = e.clientX;
+        //     let y = e.clientY;
+        //     tool.lineTo(x,y);
+        //     tool.stroke();
+        // });
+        tool.lineWidth=10;
+        for(let i=0; i<colorDiv.length; i++){
+            colorDiv[i].addEventListener("click", function(e){
+                let clr = colorDiv[i].classList[0];
+                tool.strokeStyle=clr;
+            })
+        }
+        let ismouseDown = false;
+
+        //we'll get x and y coordinates considering origin as page's origin
+        //tool.moveTo(x,y) will move to x and y based on canvas's origin
+        //therefore there will be a difference in where you intend to draw and where drawing actually happens
+        //to solve this issue, we'll use getboundingClientRect function
+        document.body.addEventListener("mousedown", function(e){
+            let x = e.clientX;
+            let y = e.clientY;
+            y = getCoordinate(y);
+            tool.beginPath();
+            tool.moveTo(x,y);
+            ismouseDown=true;
+
+        });
+        document.body.addEventListener("mousemove", function(e){
+            let x = e.clientX;
+            let y = e.clientY;
+            y = getCoordinate(y);
+            if(ismouseDown){
+                tool.lineTo(x,y);
+                tool.stroke();
+            }
+        });
+        document.body.addEventListener("mouseup", function(e){
+            let x = e.clientX;
+            let y = e.clientY;
+            y = getCoordinate(y);
+            tool.lineTo(x,y);
+            // tool.stroke();
+            ismouseDown = false;
+        });
+
+        function getCoordinate(initialY){
+            let obj = theme.getBoundingClientRect();
+            return initialY - obj.height;
+        }
+
+        //drawing image
+        let img = document.querySelector("img");
+        img.addEventListener("load", function(){
+            //.drawImage(image, starting x, starting y, height, width);
+            tool.drawImage(img, 100,100);
+        });
+    </script>
+</body>
+
+</html>
+
+<!-- Canvas is a 2D drawing API. Essentially the browser gives you a rectanglar area on the screen that you can draw into. You can draw 
+lines, shapes, images, text; pretty much anything you want. Canvas was originally created by Apple for its Dashboard widgets, but it 
+has since been adopted by every major browser vendor and is now part of the HTML 5 spec. -->
